@@ -86,17 +86,26 @@ function onImageClick(event) {
         return;
     }
 
-    const imageInstance = basicLightbox.create(`
+  const imageInstance = basicLightbox.create(`
     <img src="${event.target.dataset.source}" width="1112" height="640">
-    `);
+    `,
+    {
+      onShow: () => {
+        window.addEventListener('keydown', handleKeydown);
+      },
+      onClose: () => {
+        window.removeEventListener('keydown', handleKeydown);
+      },
+    },
+  );
 
-    imageInstance.show();
+  const handleKeydown = (event) => {
+    if (event.code === 'Escape') {
+      imageInstance.close();
+    }
+  };
 
-    document.addEventListener('keydown', (event) => {
-        if (event.code === 'Escape') {
-            imageInstance.close();
-        }
-    });
+ imageInstance.show();
 }
 
 
